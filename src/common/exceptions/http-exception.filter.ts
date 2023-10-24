@@ -17,18 +17,18 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const status = exception.getStatus();
     const error = exception.getResponse() as
       | string
-      | { error: string; statusCode: number; message: string };
+      | { error: string; statusCode: number; message: string[] };
     this.logger.error(error);
-    console.log(exception);
+
+    if (typeof error['message'] === 'string') {
+      error['message'] = [error['message']];
+    }
 
     if (typeof error === 'string') {
       response
         .status(status)
         .json({ success: true, statusCode: status, message: error });
     } else {
-      if (typeof error.message !== 'string') {
-        error.message = error['message'][0]; // typeorm_message가 list로 오기 때문
-      }
       response.status(status).json({ success: false, ...error });
     }
   }

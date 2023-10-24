@@ -7,17 +7,17 @@ import { Column, Entity } from 'typeorm';
 })
 export class User extends CommonEntity {
   @IsString()
-  @IsNotEmpty()
+  @IsNotEmpty({ message: '이메일을 입력해주세요.' })
   @Column({ type: 'varchar', name: 'email' })
   email: string;
 
   @IsString()
-  @IsNotEmpty({ message: '이름을 작성해주세용' })
+  @IsNotEmpty({ message: '이름을 입력해주세요.' })
   @Column({ type: 'varchar', name: 'name' })
   name: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsNotEmpty({ message: '비밀번호를 확인해주세요.' })
   @Column({ type: 'varchar', name: 'password' })
   password: string;
 
