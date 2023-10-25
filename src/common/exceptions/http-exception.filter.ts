@@ -20,6 +20,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       | { error: string; statusCode: number; message: string[] };
     this.logger.error(error);
 
+    // error message가 여러 개 일수도 있기 때문에 list 처리
     if (typeof error['message'] === 'string') {
       error['message'] = [error['message']];
     }

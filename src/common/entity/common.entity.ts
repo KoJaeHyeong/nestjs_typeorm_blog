@@ -12,11 +12,11 @@ export abstract class CommonEntity {
   id: string;
 
   @CreateDateColumn({ type: 'timestamp' })
-  createdAt: Date;
+  created_at: Date;
 
   @UpdateDateColumn({ type: 'timestamp' })
-  updatedAt: Date;
+  updated_at: Date;
 
   @DeleteDateColumn({ type: 'timestamp', default: null })
-  deleteAt: Date;
+  delete_at: Date;
 }
