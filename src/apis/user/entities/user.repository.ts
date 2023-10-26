@@ -1,3 +1,4 @@
+import { BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from '../dto/create.user.dto';
@@ -10,10 +11,7 @@ export class UserRepository {
   ) {}
 
   async userSave(userInfo: CreateUserDto) {
-    const result = await this.userRepository.save(userInfo);
-    console.log('saveResult', result);
-
-    return result;
+    return await this.userRepository.save(userInfo);
   }
 
   async userExistByEmail(email: string) {
@@ -24,5 +22,22 @@ export class UserRepository {
     });
 
     return result;
+  }
+
+  async userFindByEmail(email: string) {
+    const result = await this.userRepository.findOne({
+      where: { email },
+    });
+
+    return result;
+  }
+
+  async userFindById(id: string) {
+    const user = await this.userRepository.findOne({ where: { id } });
+    if (!user)
+      throw new BadRequestException('해당하는 사용자를 찾을 수 없습니다.');
+
+    delete user.password;
+    return user;
   }
 }

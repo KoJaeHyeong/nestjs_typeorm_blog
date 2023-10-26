@@ -1,3 +1,4 @@
+import { AuthModule } from 'src/apis/auth/auth.module';
 import { BlogModule } from 'src/apis/blog/blog.module';
 import { BlogTagModule } from 'src/apis/blog_tag/blog_tag.module';
 import { ProfileModule } from 'src/apis/profile/profile.module';
@@ -10,5 +11,6 @@ export const apiModules = [
   BlogModule,
   BlogTagModule,
   TagModule,
+  AuthModule,
   // VisitorModule,
 ];

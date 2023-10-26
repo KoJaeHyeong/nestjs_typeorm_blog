@@ -11,6 +11,7 @@ import { apiModules } from './common/modules/apis.modules';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+
     TypeOrmModule.forRootAsync({ useFactory: ormconfig }),
     ...apiModules,
   ],

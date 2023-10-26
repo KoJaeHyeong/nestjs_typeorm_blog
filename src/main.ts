@@ -8,7 +8,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as expressBasicAuth from 'express-basic-auth';
 import { AppModule } from './app.module';
-import { HttpExceptionFilter } from './common/exceptions/http-exception.filter';
+import { HttpExceptionFilter } from './common/filter/http-exception.filter';
 
 class Application {
   private logger = new Logger(Application.name);

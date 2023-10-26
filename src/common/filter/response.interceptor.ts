@@ -9,7 +9,8 @@ import { map } from 'rxjs/operators';
 
 export interface Response<T> {
   data: T[];
-  statusCode: number;
+  // statusCode: number;
+  success: boolean;
 }
 
 @Injectable()
@@ -26,7 +27,7 @@ export class ResponseInterceptor<T> implements NestInterceptor<T, Response<T>> {
         // }
         const statusCode = context.switchToHttp().getResponse().statusCode;
 
-        return { data: new Array(data), statusCode };
+        return { success: true, data: new Array(data) };
       }),
     );
   }
