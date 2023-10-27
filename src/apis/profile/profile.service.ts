@@ -1,16 +1,31 @@
 import { Injectable } from '@nestjs/common';
-import { ProfileCreateDto } from './dto/profile.create.dto';
+import { IAuthUser } from 'src/common/auth/get-users.decorators';
+import { CreateProfileDto } from './dto/create.profile.dto';
+import { UpdateProfileDto } from './dto/update.profile.dto';
 import { ProfileRepository } from './entities/profile.repository';
 
 @Injectable()
 export class ProfileService {
   constructor(private readonly profileRepository: ProfileRepository) {}
 
-  async profileSave(profileInfo: ProfileCreateDto, payload: any) {
+  async saveProfile(profileInfo: CreateProfileDto, authUser: IAuthUser) {
     // const { intro, site } = profileInfo;
 
-    console.log(payload);
+    return await this.profileRepository.saveProfile(profileInfo, authUser);
+  }
 
-    return await this.profileRepository.profileSave(profileInfo);
+  async updateProfile(id: string, profileInfo: UpdateProfileDto) {
+    const profile = await this.profileRepository.findProfileById(id);
+
+    console.log('profile', profile);
+    console.log('input', profileInfo);
+    const newProfile = {
+      ...profile,
+      ...profileInfo,
+    };
+
+    console.log('newProfile', newProfile);
+
+    return await this.profileRepository.updateProfile(newProfile);
   }
 }

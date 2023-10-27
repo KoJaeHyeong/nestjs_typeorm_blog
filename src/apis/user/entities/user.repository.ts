@@ -33,7 +33,9 @@ export class UserRepository {
   }
 
   async userFindById(id: string) {
-    const user = await this.userRepository.findOne({ where: { id } });
+    const user = await this.userRepository.findOne({
+      where: { id },
+    });
     if (!user)
       throw new BadRequestException('해당하는 사용자를 찾을 수 없습니다.');
 

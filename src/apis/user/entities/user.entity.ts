@@ -28,7 +28,7 @@ export class User extends CommonEntity {
   @Column({ type: 'boolean', default: false })
   isAdmin: boolean;
 
-  @OneToOne((type) => Profile, (profile) => profile.user)
+  @OneToOne((type) => Profile, (profile) => profile)
   @JoinColumn({ name: 'profile_id' })
   profile: Profile;
 

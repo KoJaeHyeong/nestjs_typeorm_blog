@@ -1,10 +1,14 @@
+import { BadRequestException, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/apis/user/entities/user.entity';
+import { IAuthUser } from 'src/common/auth/get-users.decorators';
 import { Repository } from 'typeorm';
-import { ProfileCreateDto } from '../dto/profile.create.dto';
+import { CreateProfileDto } from '../dto/create.profile.dto';
 import { Profile } from './profile.entity';
 
 export class ProfileRepository {
+  private logger = new Logger(ProfileRepository.name);
+
   constructor(
     @InjectRepository(Profile)
     private readonly profileRepository: Repository<Profile>,
@@ -12,24 +16,45 @@ export class ProfileRepository {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async profileSave(profileInfo: ProfileCreateDto) {
-    // return await this.profileRepository.save(profileInfo);
-    const result = await this.profileRepository.save(profileInfo);
+  async saveProfile(profileInfo: CreateProfileDto, authUser: IAuthUser) {
+    try {
+      const result = await this.profileRepository.save(profileInfo);
 
-    console.log(result);
+      await this.userRepository.update(
+        {
+          id: authUser.id,
+        },
+        {
+          profile: result,
+        },
+      );
 
-    // await this.userRepository.update(
-    //   { id: '06786b31-5b81-4d95-adf4-dcec5bc7c86d' },
-    //   { profile: result },
-    // );
+      return result;
+    } catch (error) {
+      this.logger.error(error.message);
+    }
+  }
 
-    const aa = await this.userRepository.findOne({
-      where: { id: '06786b31-5b81-4d95-adf4-dcec5bc7c86d' },
-      relations: ['profile'],
-    });
+  // save를 통해 결과값을 모두 반환 해줘야 그 값을 표출하기 편함.
+  async updateProfile(profileInfo: object) {
+    try {
+      const result = await this.profileRepository.save(profileInfo);
 
-    console.log(aa);
+      return result;
+    } catch (error) {
+      this.logger.error(error.message);
+    }
+  }
 
-    return aa;
+  async findProfileById(id: string) {
+    try {
+      const profile = await this.profileRepository.findOne({ where: { id } });
+      if (!profile)
+        throw new BadRequestException('프로필이 존재하지 않습니다.');
+
+      return profile;
+    } catch (error) {
+      this.logger.error(error.message);
+    }
   }
 }

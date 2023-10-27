@@ -31,6 +31,8 @@ export class UsersService {
       password: hashPassword,
     });
 
+    delete result.password;
+
     return result;
   }
 

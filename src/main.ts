@@ -56,6 +56,8 @@ class Application {
     this.setOpenAPIMiddleWare();
     this.server.useGlobalPipes(
       new ValidationPipe({
+        whitelist: true, // type에 맞지 않는 param 들어올시 에러
+        forbidNonWhitelisted: true, // type에 맞지 않는 param 들어올시 에러
         transform: true,
       }),
     );

@@ -26,7 +26,6 @@ export class ResponseInterceptor<T> implements NestInterceptor<T, Response<T>> {
         //   delete data.password;
         // }
         const statusCode = context.switchToHttp().getResponse().statusCode;
-
         return { success: true, data: new Array(data) };
       }),
     );
