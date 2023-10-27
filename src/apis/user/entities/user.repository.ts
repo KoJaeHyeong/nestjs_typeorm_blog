@@ -32,10 +32,12 @@ export class UserRepository {
     return result;
   }
 
-  async userFindById(id: string) {
+  async userFindById(id: string, rel?: string) {
     const user = await this.userRepository.findOne({
       where: { id },
+      relations: [rel],
     });
+
     if (!user)
       throw new BadRequestException('해당하는 사용자를 찾을 수 없습니다.');
 

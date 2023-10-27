@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { UserRepository } from 'src/apis/user/entities/user.repository';
@@ -20,12 +20,12 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: PayLoad) {
-    const user = await this.userRepository.userFindById(payload.sub);
+    // const user = await this.userRepository.userFindById(payload.sub);
 
-    if (!user) {
-      throw new UnauthorizedException();
-    } else {
-      return payload; // @Req 의 user로 들어감.
-    }
+    // if (!user) {
+    //   throw new UnauthorizedException();
+    // } else {
+    return payload; // @Req 의 user로 들어감.
+    // }
   }
 }

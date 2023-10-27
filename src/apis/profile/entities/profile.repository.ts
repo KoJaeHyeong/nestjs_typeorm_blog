@@ -57,4 +57,23 @@ export class ProfileRepository {
       this.logger.error(error.message);
     }
   }
+
+  async fetchProfile(userId: string) {
+    try {
+      const user = await this.userRepository.findOne({
+        where: { id: userId },
+        relations: ['profile'],
+      });
+
+      const profileId = user.profile.id;
+
+      const result = await this.profileRepository.findOne({
+        where: { id: profileId },
+      });
+
+      return result;
+    } catch (error) {
+      this.logger.error(error.message);
+    }
+  }
 }

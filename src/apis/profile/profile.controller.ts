@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   Param,
   Post,
   Put,
@@ -28,9 +29,13 @@ export class ProfileController {
     @Body() body: CreateProfileDto,
     @AuthUser() authUser: IAuthUser,
   ) {
-    console.log(body);
-
     return await this.profileService.saveProfile(body, authUser);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get()
+  async fetchProfile(@AuthUser() authUser: IAuthUser) {
+    return await this.profileService.fetchProfile(authUser);
   }
 
   @UseGuards(JwtAuthGuard)
