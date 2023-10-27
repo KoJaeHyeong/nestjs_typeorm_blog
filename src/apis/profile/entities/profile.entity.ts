@@ -12,6 +12,8 @@ export class Profile extends CommonEntity {
   @Column({ type: 'varchar', nullable: true })
   site: string;
 
-  @OneToOne((type) => User, (user) => user.profile)
+  @OneToOne((type) => User, (user) => user.profile, {
+    cascade: ['insert', 'update'],
+  })
   user: User;
 }

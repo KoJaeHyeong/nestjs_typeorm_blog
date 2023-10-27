@@ -9,7 +9,7 @@ export class AuthService {
     const payload = { email: data.email, sub: data.id };
     const token = this.jwtService.sign(payload, {
       secret: process.env.JWT_SECRET_KEY,
-      expiresIn: '20s',
+      expiresIn: '1d',
     });
 
     return { token: token };

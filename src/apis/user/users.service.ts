@@ -39,7 +39,7 @@ export class UsersService {
 
     const user = await this.userRepository.userFindByEmail(email);
 
-    console.log(user);
+    console.log('find_user', user);
 
     if (!user) throw new UnauthorizedException('존재하지 않는 이메일입니다.');
 
