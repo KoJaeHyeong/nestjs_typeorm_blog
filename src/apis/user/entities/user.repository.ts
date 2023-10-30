@@ -1,17 +1,23 @@
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Profile } from 'src/apis/profile/entities/profile.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from '../dto/create.user.dto';
 import { User } from './user.entity';
 
 export class UserRepository {
+  private readonly logger = new Logger(UserRepository.name);
+
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(Profile)
+    private readonly profileRepository: Repository<Profile>,
   ) {}
 
   async userSave(userInfo: CreateUserDto) {
-    return await this.userRepository.save(userInfo);
+    const profile = await this.profileRepository.save({});
+    return await this.userRepository.save({ ...userInfo, profile: profile });
   }
 
   async userExistByEmail(email: string) {
@@ -24,7 +30,7 @@ export class UserRepository {
     return result;
   }
 
-  async userFindByEmail(email: string) {
+  async userFindByEmail(email: string, rel?: string) {
     const result = await this.userRepository.findOne({
       where: { email },
     });
@@ -32,10 +38,9 @@ export class UserRepository {
     return result;
   }
 
-  async userFindById(id: string, rel?: string) {
+  async userFindById(id: string) {
     const user = await this.userRepository.findOne({
       where: { id },
-      relations: [rel],
     });
 
     if (!user)
@@ -43,5 +48,33 @@ export class UserRepository {
 
     delete user.password;
     return user;
+  }
+
+  async userUpdateByEmail(body: any) {
+    try {
+      const { email, ...updateInfo } = body;
+
+      return await this.userRepository.save(body);
+    } catch (error) {
+      this.logger.error(error.message);
+    }
+  }
+
+  async userUpdate(body: any) {
+    try {
+      return await this.userRepository.save(body);
+    } catch (error) {
+      this.logger.error(error.message);
+    }
+  }
+
+  async deleteUser(user: any) {
+    try {
+      await this.userRepository.remove(user);
+
+      return true;
+    } catch (error) {
+      this.logger.error(error.message);
+    }
   }
 }

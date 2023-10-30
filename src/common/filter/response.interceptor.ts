@@ -22,10 +22,10 @@ export class ResponseInterceptor<T> implements NestInterceptor<T, Response<T>> {
     return next.handle().pipe(
       map((data) => {
         // // response 성공 시 반환하면 안되는 값 제거
-        // if (Object.keys(data).includes('password')) {
-        //   delete data.password;
-        // }
-        const statusCode = context.switchToHttp().getResponse().statusCode;
+        if (Object.keys(data).includes('password')) {
+          delete data.password;
+        }
+        // const statusCode = context.switchToHttp().getResponse().statusCode;
         return { success: true, data: new Array(data) };
       }),
     );

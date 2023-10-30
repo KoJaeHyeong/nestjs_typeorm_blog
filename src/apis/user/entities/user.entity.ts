@@ -2,7 +2,7 @@ import { IsBoolean, IsEmail, IsNotEmpty, IsString } from 'class-validator';
 import { Blog } from 'src/apis/blog/entities/blog.entity';
 import { Profile } from 'src/apis/profile/entities/profile.entity';
 import { CommonEntity } from 'src/common/entity/common.entity';
-import { Column, Entity, JoinColumn, OneToMany, OneToOne } from 'typeorm';
+import { Column, Entity, OneToMany, OneToOne } from 'typeorm';
 
 @Entity({
   name: 'user',
@@ -28,8 +28,10 @@ export class User extends CommonEntity {
   @Column({ type: 'boolean', default: false })
   isAdmin: boolean;
 
-  @OneToOne((type) => Profile, (profile) => profile)
-  @JoinColumn({ name: 'profile_id' })
+  @OneToOne((type) => Profile, (profile) => profile.user, {
+    cascade: true,
+  })
+  // @JoinColumn({ name: 'profile_id' })
   profile: Profile;
 
   @OneToMany((type) => Blog, (blog) => blog.user)

@@ -9,19 +9,19 @@ export class CreateUserDto extends PickType(User, [
 ] as const) {
   @ApiProperty({
     required: true,
-    type: 'string',
+    description: 'email',
     example: 'kojae1586@naver.com',
   })
   email: string;
   @ApiProperty({
     required: true,
-    type: 'string',
+    description: 'name',
     example: '재형킹',
   })
   name: string;
   @ApiProperty({
     required: true,
-    type: 'string',
+    description: 'password',
     example: '1234',
   })
   password: string;

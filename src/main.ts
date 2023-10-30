@@ -40,10 +40,22 @@ class Application {
       .setTitle('BLOG - API')
       .setDescription('BLOG CRUD')
       .setVersion('1.0.0')
+      .addBearerAuth(
+        {
+          type: 'http',
+          scheme: 'bearer',
+          name: 'JWT',
+          description: 'Jwt Token',
+          in: 'header',
+        },
+        'access_token',
+      )
       .build();
 
     const document = SwaggerModule.createDocument(this.server, config);
-    SwaggerModule.setup('docs', this.server, document);
+    SwaggerModule.setup('docs', this.server, document, {
+      swaggerOptions: { defaultModelsExpandDepth: -1 }, // schemes를 없애기 위함.
+    });
   }
 
   // 전역 미들웨어
