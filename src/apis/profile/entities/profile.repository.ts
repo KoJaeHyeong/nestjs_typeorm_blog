@@ -1,7 +1,6 @@
 import { BadRequestException, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/apis/user/entities/user.entity';
-import { IAuthUser } from 'src/common/auth/get-users.decorators';
 import { Repository } from 'typeorm';
 import { CreateProfileDto } from '../dto/create.profile.dto';
 import { Profile } from './profile.entity';
@@ -16,20 +15,19 @@ export class ProfileRepository {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async saveProfile(profileInfo: CreateProfileDto, authUser: IAuthUser) {
+  async saveProfile(authId: string, profileInfo: CreateProfileDto) {
     try {
-      const result = await this.profileRepository.save(profileInfo);
+      const fetchUser = await this.userRepository.findOne({
+        where: { id: authId },
+      });
+      const result = await this.profileRepository.save({
+        ...profileInfo,
+        user: fetchUser,
+      });
 
-      await this.userRepository.update(
-        {
-          id: authUser.id,
-        },
-        {
-          profile: result,
-        },
-      );
+      const { user, ...data } = result; // return_form 변경
 
-      return result;
+      return data;
     } catch (error) {
       this.logger.error(error.message);
     }
@@ -72,6 +70,16 @@ export class ProfileRepository {
       });
 
       return result;
+    } catch (error) {
+      this.logger.error(error.message);
+    }
+  }
+
+  async deleteProfile(profileId: string) {
+    try {
+      await this.profileRepository.delete(profileId);
+
+      return true;
     } catch (error) {
       this.logger.error(error.message);
     }

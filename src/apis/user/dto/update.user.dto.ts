@@ -8,6 +8,7 @@ export class UpdateUserDto extends OmitType(CreateUserDto, ['email'] as const) {
   @ApiProperty({
     description: 'name',
     example: '철수',
+    required: false,
   })
   name: string;
 
@@ -15,6 +16,7 @@ export class UpdateUserDto extends OmitType(CreateUserDto, ['email'] as const) {
   @ApiProperty({
     description: 'password',
     example: '19990',
+    required: false,
   })
   password: string;
 }

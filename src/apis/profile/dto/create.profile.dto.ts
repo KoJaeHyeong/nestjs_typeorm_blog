@@ -8,14 +8,14 @@ export class CreateProfileDto extends PickType(Profile, [
 ] as const) {
   @ApiProperty({
     required: false,
-    type: 'string',
+    description: '프로필 소개',
     example: '저의 프로필을 소개합니다.',
   })
   intro: string;
 
   @ApiProperty({
     required: false,
-    type: 'string',
+    description: '블로그 사이트',
     example: 'www.naver.com',
   })
   site: string;

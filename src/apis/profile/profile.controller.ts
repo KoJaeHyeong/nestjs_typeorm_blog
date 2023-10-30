@@ -1,10 +1,11 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
+  Patch,
   Post,
-  Put,
   UseFilters,
   UseGuards,
   UseInterceptors,
@@ -26,15 +27,26 @@ export class ProfileController {
   constructor(private readonly profileService: ProfileService) {}
 
   @ApiOperation({
-    summary: '프로필 작성',
+    summary: '프로필  작성',
   })
+  @ApiBearerAuth('access_token')
   @UseGuards(JwtAuthGuard)
   @Post()
   async createProfile(
-    @Body() body: CreateProfileDto,
     @AuthUser() authUser: IAuthUser,
+    @Body() body: CreateProfileDto,
   ) {
-    return await this.profileService.saveProfile(body, authUser);
+    return await this.profileService.saveProfile(authUser.id, body);
+  }
+
+  @ApiOperation({
+    summary: '프로필 수정',
+  })
+  @ApiBearerAuth('access_token')
+  @UseGuards(JwtAuthGuard)
+  @Patch(':id')
+  async updateProfile(@Param('id') id: string, @Body() body: UpdateProfileDto) {
+    return await this.profileService.updateProfile(id, body);
   }
 
   @ApiOperation({
@@ -48,11 +60,12 @@ export class ProfileController {
   }
 
   @ApiOperation({
-    summary: '프로필 수정',
+    summary: '프로필 삭제',
   })
+  @ApiBearerAuth('access_token')
   @UseGuards(JwtAuthGuard)
-  @Put(':id')
-  async updateProfile(@Param('id') id: string, @Body() body: UpdateProfileDto) {
-    return await this.profileService.updateProfile(id, body);
+  @Delete(':id')
+  async deleteProfile(@Param('id') id: string) {
+    return await this.profileService.deleteProfile(id);
   }
 }

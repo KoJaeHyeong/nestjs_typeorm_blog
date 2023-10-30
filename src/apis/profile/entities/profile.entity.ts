@@ -9,11 +9,11 @@ import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
 export class Profile extends CommonEntity {
   @IsString()
   @Column({ type: 'text', name: 'intro', nullable: true })
-  intro: string;
+  intro?: string;
 
   @IsString()
-  @Column({ type: 'varchar', nullable: true })
-  site: string;
+  @Column({ type: 'varchar', name: 'site', nullable: true })
+  site?: string;
 
   @OneToOne((type) => User, (user) => user.profile, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })

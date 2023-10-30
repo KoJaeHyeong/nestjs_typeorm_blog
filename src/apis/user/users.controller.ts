@@ -16,6 +16,7 @@ import { ResponseInterceptor } from 'src/common/filter/response.interceptor';
 import { LoginDto } from '../auth/dto/login.request.dto';
 import { JwtAuthGuard } from '../auth/jwt/jwt.guard';
 import { CreateUserDto } from './dto/create.user.dto';
+import { deleteUserDto } from './dto/delete.user.dto';
 import { UpdateUserDto } from './dto/update.user.dto';
 import { UsersService } from './users.service';
 
@@ -76,7 +77,10 @@ export class UsersController {
     summary: '회원 탈퇴',
   })
   @Delete()
-  async deleteUser(@AuthUser() authUser: IAuthUser, @Body() body: any) {
+  async deleteUser(
+    @AuthUser() authUser: IAuthUser,
+    @Body() body: deleteUserDto,
+  ) {
     return await this.usersService.deleteUser(authUser.email, body);
   }
 }

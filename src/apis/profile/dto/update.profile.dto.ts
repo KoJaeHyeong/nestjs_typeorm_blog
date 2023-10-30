@@ -1,20 +1,21 @@
-import { PartialType } from '@nestjs/mapped-types';
+import { PickType } from '@nestjs/mapped-types';
 import { ApiProperty } from '@nestjs/swagger';
-import { CreateProfileDto } from './create.profile.dto';
+import { Profile } from '../entities/profile.entity';
 
-export class UpdateProfileDto extends PartialType(CreateProfileDto) {
+export class UpdateProfileDto extends PickType(Profile, [
+  'intro',
+  'site',
+] as const) {
   @ApiProperty({
-    nullable: true,
     required: false,
-    type: 'string',
+    description: '프로필 소개',
     example: '저의 프로필을 수정합니다.',
   })
   intro: string;
 
   @ApiProperty({
-    nullable: true,
     required: false,
-    type: 'string',
+    description: '블로그 사이트',
     example: 'www.google.com',
   })
   site: string;

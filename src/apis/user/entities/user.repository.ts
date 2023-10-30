@@ -16,8 +16,7 @@ export class UserRepository {
   ) {}
 
   async userSave(userInfo: CreateUserDto) {
-    const profile = await this.profileRepository.save({});
-    return await this.userRepository.save({ ...userInfo, profile: profile });
+    return await this.userRepository.save({ ...userInfo });
   }
 
   async userExistByEmail(email: string) {
