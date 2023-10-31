@@ -11,12 +11,12 @@ export class CreateProfileDto extends PickType(Profile, [
     description: '프로필 소개',
     example: '저의 프로필을 소개합니다.',
   })
-  intro: string;
+  intro?: string;
 
   @ApiProperty({
     required: false,
     description: '블로그 사이트',
     example: 'www.naver.com',
   })
-  site: string;
+  site?: string;
 }

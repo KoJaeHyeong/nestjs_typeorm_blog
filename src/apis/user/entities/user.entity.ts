@@ -34,6 +34,6 @@ export class User extends CommonEntity {
   // @JoinColumn({ name: 'profile_id' })
   profile: Profile;
 
-  @OneToMany((type) => Blog, (blog) => blog.user)
+  @OneToMany((type) => Blog, (blog) => blog.user, { cascade: true })
   blog: Blog[];
 }

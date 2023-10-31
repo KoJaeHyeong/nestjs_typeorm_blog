@@ -22,7 +22,7 @@ import { ProfileService } from './profile.service';
 @UseInterceptors(ResponseInterceptor)
 @UseFilters(HttpExceptionFilter)
 @ApiTags('Profile')
-@Controller('profile')
+@Controller('users/profile')
 export class ProfileController {
   constructor(private readonly profileService: ProfileService) {}
 

@@ -1,4 +1,4 @@
-import { IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 import { User } from 'src/apis/user/entities/user.entity';
 import { CommonEntity } from 'src/common/entity/common.entity';
 import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
@@ -8,10 +8,12 @@ import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
 })
 export class Profile extends CommonEntity {
   @IsString()
+  @IsOptional()
   @Column({ type: 'text', name: 'intro', nullable: true })
   intro?: string;
 
   @IsString()
+  @IsOptional()
   @Column({ type: 'varchar', name: 'site', nullable: true })
   site?: string;
 

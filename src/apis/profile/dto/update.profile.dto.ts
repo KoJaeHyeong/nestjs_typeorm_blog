@@ -11,12 +11,12 @@ export class UpdateProfileDto extends PickType(Profile, [
     description: '프로필 소개',
     example: '저의 프로필을 수정합니다.',
   })
-  intro: string;
+  intro?: string;
 
   @ApiProperty({
     required: false,
     description: '블로그 사이트',
     example: 'www.google.com',
   })
-  site: string;
+  site?: string;
 }

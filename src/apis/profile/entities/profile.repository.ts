@@ -17,6 +17,8 @@ export class ProfileRepository {
 
   async saveProfile(authId: string, profileInfo: CreateProfileDto) {
     try {
+      console.log('profileInfo', profileInfo);
+
       const fetchUser = await this.userRepository.findOne({
         where: { id: authId },
       });
