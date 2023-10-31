@@ -47,6 +47,10 @@ export class BlogService {
     return result;
   }
 
+  async fetchAllBlog(id: string, page: number, take: number) {
+    return await this.blogRepository.findByConuntBlog(id, page, take);
+  }
+
   async deleteBlog(blogId: string) {
     const blog = await this.blogRepository.findBlogById(blogId);
 

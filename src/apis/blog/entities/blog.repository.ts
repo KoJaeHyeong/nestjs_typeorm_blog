@@ -43,4 +43,25 @@ export class BlogRepository {
       this.logger.error(error.message);
     }
   }
+
+  async findByConuntBlog(id: string, page: number, take: number) {
+    const result = await this.blogRepositroy.findAndCount({
+      take: take,
+      skip: (page - 1) * take,
+      where: { user: { id: id } },
+      order: { created_at: 'DESC' },
+    });
+
+    console.log(result);
+
+    // console.log(result);
+    const [blog, total] = result;
+
+    const paginatedBlog = {
+      blogs: blog,
+      blogs_count: total,
+      last_page_no: Math.ceil(total / take),
+    };
+    return paginatedBlog;
+  }
 }

@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   Req,
   UseFilters,
   UseGuards,
@@ -55,18 +56,20 @@ export class BlogController {
   @UseGuards(JwtAuthGuard)
   @Get(':id')
   async fetchBlog(@Param('id') blogId: string, @Req() req: Request) {
-    console.log(req.url);
-    console.log(req.method);
     return await this.blogService.fetchBlog(blogId);
   }
 
-  // @ApiOperation({ summary: '유저의 블로그 목록 조회' }) //todo 페이지네이션으로 구현
-  // @ApiBearerAuth('access_token')
-  // @UseGuards(JwtAuthGuard)
-  // @Get(':id')
-  // async fetchBlog(@Param('id') blogId: string) {
-  //   return await this.blogService.fetchBlog(blogId);
-  // }
+  @ApiOperation({ summary: '유저의 블로그 목록 조회' }) //todo 페이지네이션으로 구현
+  @ApiBearerAuth('access_token')
+  @UseGuards(JwtAuthGuard)
+  @Get()
+  async fetchAllBlog(
+    @AuthUser() authUser: IAuthUser,
+    @Query('page') page: number = 1,
+    @Query('take') take: number,
+  ) {
+    return await this.blogService.fetchAllBlog(authUser.id, page, take);
+  }
 
   @ApiOperation({ summary: '블로그 삭제' })
   @ApiBearerAuth('access_token')
