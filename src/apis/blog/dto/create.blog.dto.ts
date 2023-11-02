@@ -1,5 +1,6 @@
 import { PickType } from '@nestjs/mapped-types';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsArray, IsOptional } from 'class-validator';
 import { Blog } from '../entities/blog.entity';
 
 export class CreateBlogDto extends PickType(Blog, [
@@ -27,4 +28,13 @@ export class CreateBlogDto extends PickType(Blog, [
     example: 'javascript와 java는 전혀 연관이 없다.',
   })
   contents?: string;
+
+  @ApiProperty({
+    required: false,
+    description: 'tag 이름',
+    example: ['Javascript', 'Java'],
+  })
+  @IsOptional()
+  @IsArray()
+  tag?: string[];
 }

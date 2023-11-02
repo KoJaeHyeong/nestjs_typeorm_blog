@@ -1,4 +1,4 @@
-import { Logger } from '@nestjs/common';
+import { InternalServerErrorException, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/apis/user/entities/user.entity';
 import { Repository } from 'typeorm';
@@ -24,14 +24,28 @@ export class BlogRepository {
     return data;
   }
 
-  async findBlogById(id: string) {
-    return await this.blogRepositroy.findOne({
-      where: { id },
-    });
+  async findBlogOneById(id: string) {
+    try {
+      const findBlog = await this.blogRepositroy.findOne({
+        where: { id },
+        // relations: ['blog_tag'],
+        relations: { blog_tag: { tag: true } },
+      });
+
+      return findBlog;
+      // return await this.blogRepositroy
+      //   .createQueryBuilder('blog')
+      //   .leftJoinAndSelect('blog.blog_tag', 'blog_tag')
+      //   .leftJoinAndSelect('blog_tag.tag', 'tag')
+      //   .where('blog.id = :id', { id: id })
+      //   .getMany();
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
   }
 
   async updateBlog(originUser: User, blogInfo: UpdateBlogDto) {
-    return await this.blogRepositroy.save({ ...blogInfo, user: originUser });
+    return await this.blogRepositroy.save({ ...blogInfo });
   }
 
   async deleteBlog(id: string) {
@@ -52,9 +66,6 @@ export class BlogRepository {
       order: { created_at: 'DESC' },
     });
 
-    console.log(result);
-
-    // console.log(result);
     const [blog, total] = result;
 
     const paginatedBlog = {

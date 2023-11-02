@@ -31,6 +31,6 @@ export class Blog extends CommonEntity {
   @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @OneToMany((type) => BlogTag, (blog_tag) => blog_tag.blog, { nullable: true })
+  @OneToMany((type) => BlogTag, (blog_tag) => blog_tag.blog)
   blog_tag: BlogTag[];
 }

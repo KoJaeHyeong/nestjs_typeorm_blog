@@ -1,8 +1,8 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { ApiProperty } from '@nestjs/swagger';
-import { Blog } from '../entities/blog.entity';
+import { CreateBlogDto } from './create.blog.dto';
 
-export class UpdateBlogDto extends PartialType(Blog) {
+export class UpdateBlogDto extends PartialType(CreateBlogDto) {
   @ApiProperty({
     description: '블로그 제목',
     example: 'docker란',
@@ -24,9 +24,9 @@ export class UpdateBlogDto extends PartialType(Blog) {
   contents?: string;
 
   @ApiProperty({
-    required: false,
-    description: '좋아요 ',
-    example: true,
+    required: true,
+    description: 'tag 이름',
+    example: ['Javascript', 'docker'],
   })
-  like_num?: number;
+  tag?: string[];
 }
