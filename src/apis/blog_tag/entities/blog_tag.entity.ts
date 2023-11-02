@@ -5,7 +5,7 @@ import { Entity, JoinColumn, ManyToOne } from 'typeorm';
 
 @Entity({ name: 'blog_tag' })
 export class BlogTag extends CommonEntity {
-  @ManyToOne((type) => Blog, (blog) => blog.blog_tag)
+  @ManyToOne((type) => Blog, (blog) => blog.blog_tag, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'blog_id' })
   blog: Blog;
 
