@@ -1,4 +1,4 @@
-import { Logger } from '@nestjs/common';
+import { InternalServerErrorException, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateCommentDto } from '../dto/create.comments.dto';
@@ -36,5 +36,22 @@ export class CommentsRepository {
       where: { id: commentId },
       relations: ['blog', 'user'],
     });
+  }
+
+  async findOneUserComments(commentId: string) {
+    return await this.commentsRepository.findOne({
+      where: { id: commentId },
+      relations: ['user'],
+    });
+  }
+
+  async deleteComments(commentsId: string) {
+    try {
+      await this.commentsRepository.delete({ id: commentsId });
+
+      return true;
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
   }
 }

@@ -2,11 +2,9 @@ import {
   Body,
   Controller,
   Delete,
-  Get,
   Param,
   Patch,
   Post,
-  Put,
   Query,
   UseFilters,
   UseGuards,
@@ -55,7 +53,7 @@ export class CommentsController {
   })
   @ApiBearerAuth('access_token')
   @UseGuards(JwtAuthGuard)
-  @Put(':comment_id')
+  @Patch(':comment_id')
   async updateComments(
     @Body() body: UpdateCommentDto,
     @Param('comment_id') commentId: string,
@@ -63,23 +61,16 @@ export class CommentsController {
     return this.commentsService.updateComments(commentId, body);
   }
 
-  @Get()
-  findAll() {
-    return this.commentsService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.commentsService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCommentDto: UpdateCommentDto) {
-    return this.commentsService.update(+id, updateCommentDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.commentsService.remove(+id);
+  @ApiOperation({
+    summary: '댓글 / 대댓글 삭제',
+  })
+  @ApiBearerAuth('access_token')
+  @UseGuards(JwtAuthGuard)
+  @Delete(':comments_id')
+  deleteComments(
+    @AuthUser() authUser: IAuthUser,
+    @Param('comments_id') commentsId: string,
+  ) {
+    return this.commentsService.deleteComments(authUser, commentsId);
   }
 }

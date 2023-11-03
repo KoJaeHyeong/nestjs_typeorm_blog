@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   InternalServerErrorException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { IAuthUser } from 'src/common/auth/get-users.decorators';
 import { CreateCommentDto } from './dto/create.comments.dto';
@@ -18,8 +19,6 @@ export class CommentsService {
     parentCommentId?: string,
   ) {
     try {
-      console.log('parentCommentId', parentCommentId);
-
       const result = await this.commentsRepository.saveComments(
         blogId,
         commentUser.id,
@@ -58,19 +57,16 @@ export class CommentsService {
     }
   }
 
-  findAll() {
-    return `This action returns all comments`;
-  }
+  async deleteComments(authUser: IAuthUser, commentsId: string) {
+    const comments =
+      await this.commentsRepository.findOneUserComments(commentsId);
 
-  findOne(id: number) {
-    return `This action returns a #${id} comment`;
-  }
+    const { user, ...commentsInfo } = comments;
 
-  update(id: number, updateCommentDto: UpdateCommentDto) {
-    return `This action updates a #${id} comment`;
-  }
+    if (!comments) throw new BadRequestException('댓글이 존재하지 않습니다.');
 
-  remove(id: number) {
-    return `This action removes a #${id} comment`;
+    if (user.id !== authUser.id) throw new UnauthorizedException();
+
+    return await this.commentsRepository.deleteComments(commentsId);
   }
 }

@@ -22,11 +22,17 @@ export class Comment extends CommonEntity {
   user: User;
 
   // 댓글
-  @OneToMany((type) => Comment, (subComments) => subComments.parentComments)
+  @OneToMany((type) => Comment, (subComments) => subComments.parentComments, {
+    cascade: true,
+  })
   subComments: Comment[];
 
   // 대댓글
-  @ManyToOne((type) => Comment, (parentComments) => parentComments.subComments)
+  @ManyToOne(
+    (type) => Comment,
+    (parentComments) => parentComments.subComments,
+    { onDelete: 'CASCADE' },
+  )
   @JoinColumn({ name: 'parentComments_id' })
   parentComments: Comment;
 }

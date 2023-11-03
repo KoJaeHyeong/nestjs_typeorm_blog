@@ -1,4 +1,3 @@
-import { Exclude } from 'class-transformer';
 import { IsBoolean, IsEmail, IsNotEmpty, IsString } from 'class-validator';
 import { Blog } from 'src/apis/blog/entities/blog.entity';
 import { Comment } from 'src/apis/comments/entities/comments.entity';
@@ -22,7 +21,6 @@ export class User extends CommonEntity {
   name: string;
 
   @IsString()
-  @Exclude()
   @IsNotEmpty({ message: '비밀번호를 확인해주세요.' })
   @Column({ type: 'varchar', name: 'password' })
   password: string;
