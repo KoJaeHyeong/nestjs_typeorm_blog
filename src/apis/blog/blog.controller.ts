@@ -7,7 +7,6 @@ import {
   Patch,
   Post,
   Query,
-  Req,
   UseFilters,
   UseGuards,
   UseInterceptors,
@@ -56,7 +55,7 @@ export class BlogController {
   @ApiBearerAuth('access_token')
   @UseGuards(JwtAuthGuard)
   @Get(':id')
-  async fetchBlog(@Param('id') blogId: string, @Req() req: Request) {
+  async fetchBlog(@Param('id') blogId: string) {
     return await this.blogService.fetchBlog(blogId);
   }
 

@@ -24,7 +24,7 @@ export class BlogRepository {
     return data;
   }
 
-  async findBlogOneById(id: string) {
+  async findBlogOneTagById(id: string) {
     try {
       const findBlog = await this.blogRepositroy.findOne({
         where: { id },
@@ -40,6 +40,33 @@ export class BlogRepository {
       //   .leftJoinAndSelect('blog_tag.tag', 'tag')
       //   .where('blog.id = :id', { id: id })
       //   .getMany();
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
+  }
+
+  async findBlogOneCommentsTagById(id: string) {
+    try {
+      // const blog = await this.blogRepositroy.findOne({
+      //   where: { id },
+      //   relations: { comments: { subComments: true } },
+      //   order: { created_at: 'ASC' },
+      // });
+      const blog = await this.blogRepositroy
+        .createQueryBuilder('blog')
+        .leftJoinAndSelect('blog.blog_tag', 'blog_tag')
+        .leftJoinAndSelect('blog_tag.tag', 'tag')
+        .leftJoinAndSelect('blog.comments', 'comments')
+        .leftJoinAndSelect('comments.subComments', 'subComments')
+        .orderBy('comments.created_at', 'ASC')
+        .addOrderBy('subComments.created_at', 'ASC')
+        .where('blog.id = :id', { id: id })
+        .andWhere('comments.parentComments_id IS NULL')
+        .getOne();
+
+      console.log(blog);
+
+      return blog;
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }

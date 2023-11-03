@@ -64,7 +64,7 @@ export class BlogService {
       let orignTagList: any[] = [];
 
       const fetchUser = await this.UserRepository.userFindById(userId);
-      const fetchBlog = await this.blogRepository.findBlogOneById(blogId);
+      const fetchBlog = await this.blogRepository.findBlogOneTagById(blogId);
 
       if (!fetchBlog)
         throw new BadRequestException('blog가 존재하지 않습니다.');
@@ -140,11 +140,19 @@ export class BlogService {
   }
 
   async fetchBlog(blogId: string) {
-    const result = await this.blogRepository.findBlogOneById(blogId);
+    const result = await this.blogRepository.findBlogOneCommentsTagById(blogId);
 
     if (!result) throw new BadRequestException('존재하지 않는 블로그입니다.');
+    const { blog_tag, ...blog } = result;
+    console.log('BLOG', blog);
 
-    return result;
+    const tagList = blog_tag.map((blog_tag) => blog_tag.tag);
+
+    console.log('tagList', tagList);
+
+    blog['tags'] = tagList;
+
+    return blog;
   }
 
   async fetchAllBlog(id: string, page: number, take: number) {
@@ -152,7 +160,7 @@ export class BlogService {
   }
 
   async deleteBlog(blogId: string) {
-    const blog = await this.blogRepository.findBlogOneById(blogId);
+    const blog = await this.blogRepository.findBlogOneCommentsTagById(blogId);
 
     if (!blog) throw new BadRequestException('존재하지 않는 블로그입니다.');
 

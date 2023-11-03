@@ -13,11 +13,11 @@ export class Comment extends CommonEntity {
   @Column({ type: 'text' })
   comments: string;
 
-  @ManyToOne((type) => Blog, (blog) => blog.comments)
+  @ManyToOne((type) => Blog, (blog) => blog.comments, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'blog_id' })
   blog: Blog;
 
-  @ManyToOne((type) => User, (user) => user.comments)
+  @ManyToOne((type) => User, (user) => user.comments, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
   user: User;
 

@@ -38,6 +38,6 @@ export class User extends CommonEntity {
   @OneToMany((type) => Blog, (blog) => blog.user, { cascade: true })
   blog: Blog[];
 
-  @OneToMany((type) => Comment, (comments) => comments.user)
+  @OneToMany((type) => Comment, (comments) => comments.user, { cascade: true })
   comments: Comment[];
 }

@@ -35,6 +35,6 @@ export class Blog extends CommonEntity {
   @OneToMany((type) => BlogTag, (blog_tag) => blog_tag.blog, { cascade: true })
   blog_tag: BlogTag[];
 
-  @OneToMany((type) => Comment, (comments) => comments.blog)
+  @OneToMany((type) => Comment, (comments) => comments.blog, { cascade: true })
   comments: Comment[];
 }
