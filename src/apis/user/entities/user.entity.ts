@@ -1,5 +1,7 @@
+import { Exclude } from 'class-transformer';
 import { IsBoolean, IsEmail, IsNotEmpty, IsString } from 'class-validator';
 import { Blog } from 'src/apis/blog/entities/blog.entity';
+import { Comment } from 'src/apis/comments/entities/comments.entity';
 import { Profile } from 'src/apis/profile/entities/profile.entity';
 import { CommonEntity } from 'src/common/entity/common.entity';
 import { Column, Entity, OneToMany, OneToOne } from 'typeorm';
@@ -20,6 +22,7 @@ export class User extends CommonEntity {
   name: string;
 
   @IsString()
+  @Exclude()
   @IsNotEmpty({ message: '비밀번호를 확인해주세요.' })
   @Column({ type: 'varchar', name: 'password' })
   password: string;
@@ -36,4 +39,7 @@ export class User extends CommonEntity {
 
   @OneToMany((type) => Blog, (blog) => blog.user, { cascade: true })
   blog: Blog[];
+
+  @OneToMany((type) => Comment, (comments) => comments.user)
+  comments: Comment[];
 }

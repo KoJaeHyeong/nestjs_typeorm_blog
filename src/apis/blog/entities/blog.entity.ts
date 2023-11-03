@@ -1,5 +1,6 @@
 import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { BlogTag } from 'src/apis/blog_tag/entities/blog_tag.entity';
+import { Comment } from 'src/apis/comments/entities/comments.entity';
 import { User } from 'src/apis/user/entities/user.entity';
 import { CommonEntity } from 'src/common/entity/common.entity';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
@@ -33,4 +34,7 @@ export class Blog extends CommonEntity {
 
   @OneToMany((type) => BlogTag, (blog_tag) => blog_tag.blog, { cascade: true })
   blog_tag: BlogTag[];
+
+  @OneToMany((type) => Comment, (comments) => comments.blog)
+  comments: Comment[];
 }
