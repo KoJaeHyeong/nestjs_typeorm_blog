@@ -9,6 +9,7 @@ import { BlogTag } from '../blog_tag/entities/blog_tag.entity';
 import { TagService } from '../tag/tag.service';
 import { UserRepository } from '../user/entities/user.repository';
 import { CreateBlogDto } from './dto/create.blog.dto';
+import { plusLikeDto } from './dto/plus.like.dto';
 import { UpdateBlogDto } from './dto/update.blog.dto';
 import { BlogRepository } from './entities/blog.repository';
 
@@ -78,8 +79,6 @@ export class BlogService {
       // tag 내용 변경 없을 시 => tag_list 설정
       tagList = blog_tag.map((blog) => blog.tag);
 
-      console.log('first', tagList);
-
       for (let el of blog_tag) {
         orignTagList.push(el.tag);
       }
@@ -96,8 +95,6 @@ export class BlogService {
       const addList = tag.filter(
         (item) => !orignTagList.map((el) => el.tag_name).includes(item),
       );
-      console.log('addList', addList);
-      console.log('deletedList', deletedList);
 
       if (deletedList.length > 0) {
         // delete 한다 deletedList에 있는 요소
@@ -144,11 +141,8 @@ export class BlogService {
 
     if (!result) throw new BadRequestException('존재하지 않는 블로그입니다.');
     const { blog_tag, ...blog } = result;
-    console.log('BLOG', blog);
 
     const tagList = blog_tag.map((blog_tag) => blog_tag.tag);
-
-    console.log('tagList', tagList);
 
     blog['tags'] = tagList;
 
@@ -167,7 +161,32 @@ export class BlogService {
     return await this.blogRepository.deleteBlog(blogId);
   }
 
-  async likeChange(blogId: string) {
-    // const result = await this.blogRepository.likeChange(blogId);
+  async likeChange(blogId: string, postlike: plusLikeDto) {
+    // console.log('@@@@@@@@@@@', blogId);
+    // if (!blogId) throw new BadRequestException('잘못된 blog_id입니다.');
+
+    const blogLikeNum = await this.blogRepository.findOneBlogById(blogId);
+
+    if (!blogLikeNum) throw new BadRequestException('잘못된 blog_id입니다.');
+
+    let { like_num, ...blog } = blogLikeNum;
+
+    like_num = postlike.postLike ? (like_num += 1) : (like_num -= 1);
+    if (like_num < 0) like_num = 0;
+
+    const newLikeNum = {
+      ...blogLikeNum,
+      like_num,
+    };
+
+    const result = await this.blogRepository.saveLikeChange(newLikeNum);
+
+    const returnForm = {
+      id: result.id,
+      postlike: postlike.postLike,
+      like_num: result.like_num,
+    };
+
+    return returnForm;
   }
 }

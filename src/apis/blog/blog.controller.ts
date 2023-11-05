@@ -13,12 +13,13 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthUser, IAuthUser } from 'src/common/auth/get-users.decorators';
-import { HttpExceptionFilter } from 'src/common/filter/http-exception.filter';
 import { ResponseInterceptor } from 'src/common/filter/response.interceptor';
 import { JwtAuthGuard } from '../auth/jwt/jwt.guard';
 
+import { HttpExceptionFilter } from 'src/common/filter/http-exception.filter';
 import { BlogService } from './blog.service';
 import { CreateBlogDto } from './dto/create.blog.dto';
+import { plusLikeDto } from './dto/plus.like.dto';
 import { UpdateBlogDto } from './dto/update.blog.dto';
 
 @UseInterceptors(ResponseInterceptor)
@@ -77,8 +78,15 @@ export class BlogController {
   }
 
   @ApiOperation({ summary: '좋아요 ' })
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('access_token')
   @Post('like')
-  async likeChange(@Query('blog_id') blogId: string) {
-    return await this.blogService.likeChange(blogId);
+  async likeChange(
+    @Query('blog_id') blogId: string,
+    @Body() body: plusLikeDto,
+  ) {
+    console.log('@@@@@@@@@blogId', blogId);
+
+    return await this.blogService.likeChange(blogId, body);
   }
 }

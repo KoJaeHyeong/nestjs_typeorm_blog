@@ -24,6 +24,18 @@ export class BlogRepository {
     return data;
   }
 
+  async findOneBlogById(id: string) {
+    console.log('blogID', id);
+
+    const blog = await this.blogRepositroy.findOne({
+      where: { id: id },
+    });
+
+    console.log(blog);
+
+    return blog;
+  }
+
   async findBlogOneTagById(id: string) {
     try {
       const findBlog = await this.blogRepositroy.findOne({
@@ -108,5 +120,9 @@ export class BlogRepository {
     return paginatedBlog;
   }
 
-  // async likeChange(blogId())
+  async saveLikeChange(newLikeNum: any) {
+    const result = await this.blogRepositroy.save(newLikeNum);
+
+    return result;
+  }
 }

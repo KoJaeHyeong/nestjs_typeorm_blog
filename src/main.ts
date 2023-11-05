@@ -9,6 +9,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as expressBasicAuth from 'express-basic-auth';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common/filter/http-exception.filter';
+import { RequestValidationPipe } from './common/filter/request.pipe';
 
 class Application {
   private logger = new Logger(Application.name);
@@ -72,6 +73,7 @@ class Application {
         forbidNonWhitelisted: true, // type에 맞지 않는 param 들어올시 에러
         transform: true,
       }),
+      new RequestValidationPipe(),
     );
     this.server.useGlobalInterceptors(
       new ClassSerializerInterceptor(this.server.get(Reflector)),

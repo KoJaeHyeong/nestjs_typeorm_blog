@@ -1,4 +1,4 @@
-import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { BlogTag } from 'src/apis/blog_tag/entities/blog_tag.entity';
 import { Comment } from 'src/apis/comments/entities/comments.entity';
 import { User } from 'src/apis/user/entities/user.entity';
@@ -24,7 +24,6 @@ export class Blog extends CommonEntity {
   @Column({ type: 'text', nullable: true })
   contents?: string;
 
-  @IsBoolean()
   @Column({ default: 0 })
   like_num: number;
 
