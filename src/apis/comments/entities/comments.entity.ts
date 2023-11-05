@@ -31,7 +31,7 @@ export class Comment extends CommonEntity {
   @ManyToOne(
     (type) => Comment,
     (parentComments) => parentComments.subComments,
-    { onDelete: 'CASCADE' },
+    { onDelete: 'CASCADE', nullable: true },
   )
   @JoinColumn({ name: 'parentComments_id' })
   parentComments: Comment;

@@ -137,16 +137,17 @@ export class BlogService {
   }
 
   async fetchBlog(blogId: string) {
-    const result = await this.blogRepository.findBlogOneCommentsTagById(blogId);
+    // const result = await this.blogRepository.findBlogOneCommentsTagById(blogId);
+    const result = await this.blogRepository.findAllComments(blogId);
 
-    if (!result) throw new BadRequestException('존재하지 않는 블로그입니다.');
-    const { blog_tag, ...blog } = result;
+    // if (!result) throw new BadRequestException('존재하지 않는 블로그입니다.');
+    // const { blog_tag, ...blog } = result;
 
-    const tagList = blog_tag.map((blog_tag) => blog_tag.tag);
+    // const tagList = blog_tag.map((blog_tag) => blog_tag.tag);
 
-    blog['tags'] = tagList;
-
-    return blog;
+    // blog['tags'] = tagList;
+    return result;
+    // return blog;
   }
 
   async fetchAllBlog(id: string, page: number, take: number) {
@@ -154,7 +155,7 @@ export class BlogService {
   }
 
   async deleteBlog(blogId: string) {
-    const blog = await this.blogRepository.findBlogOneCommentsTagById(blogId);
+    const blog = await this.blogRepository.findOneBlogById(blogId);
 
     if (!blog) throw new BadRequestException('존재하지 않는 블로그입니다.');
 

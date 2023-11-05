@@ -19,12 +19,21 @@ export class CommentsRepository {
     parentCommentId?: string,
   ) {
     try {
-      return await this.commentsRepository.save({
-        blog: { id: blogId },
-        user: { id: userId },
-        parentComments: { id: parentCommentId },
-        ...commentInfo,
-      });
+      if (parentCommentId) {
+        return await this.commentsRepository.save({
+          blog: { id: blogId },
+          user: { id: userId },
+          parentComments: { id: parentCommentId },
+          ...commentInfo,
+        });
+      } else {
+        return await this.commentsRepository.save({
+          blog: { id: blogId },
+          user: { id: userId },
+          // parentComments: { id: parentCommentId },
+          ...commentInfo,
+        });
+      }
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }

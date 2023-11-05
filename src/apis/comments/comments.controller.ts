@@ -44,9 +44,7 @@ export class CommentsController {
     @AuthUser() authUser: IAuthUser,
     @Query('parentComment_id') parentCommentId?: string,
   ) {
-    console.log(parentCommentId);
-
-    return this.commentsService.createComments(
+    return await this.commentsService.createComments(
       authUser,
       body,
       blogId,
