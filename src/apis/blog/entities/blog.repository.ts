@@ -126,8 +126,6 @@ export class BlogRepository {
         order: { created_at: 'ASC' },
       });
 
-      console.log('replies', replies);
-
       if (replies.length > 0) {
         // subCommemts에는 할당할 동안 기다릴 필요가 없다.(재귀함수)
         comment.subComments = await Promise.all(
@@ -138,10 +136,6 @@ export class BlogRepository {
       // 재귀함수 종료 시점
       return comment;
     };
-
-    // const rootComments = await this.commentsRepository.find({
-    //   where: { blog: { id: id }, parentComments: null },
-    // });
 
     const pComments = await this.commentsRepository
       .createQueryBuilder('comments')
@@ -154,13 +148,11 @@ export class BlogRepository {
     const commentsWithSub = await Promise.all(
       pComments.map((comment) => {
         const result = getCommentsWithReplies(comment);
-        console.log('result', result);
 
         return result;
       }),
     );
 
-    console.log('commentsWithReplies', commentsWithSub);
     return commentsWithSub;
   }
 
