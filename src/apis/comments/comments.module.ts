@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BlogModule } from '../blog/blog.module';
 import { Blog } from '../blog/entities/blog.entity';
+import { BlogRepository } from '../blog/entities/blog.repository';
 import { User } from '../user/entities/user.entity';
 import { UsersModule } from '../user/users.module';
 import { CommentsController } from './comments.controller';
@@ -16,6 +17,6 @@ import { CommentsRepository } from './entities/comments.repository';
     UsersModule,
   ],
   controllers: [CommentsController],
-  providers: [CommentsService, CommentsRepository],
+  providers: [CommentsService, CommentsRepository, BlogRepository],
 })
 export class CommentsModule {}

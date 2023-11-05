@@ -52,8 +52,6 @@ export class ProfileController {
   @ApiOperation({
     summary: '프로필 조회',
   })
-  @ApiBearerAuth('access_token')
-  @UseGuards(JwtAuthGuard)
   @Get()
   async fetchProfile(@AuthUser() authUser: IAuthUser) {
     return await this.profileService.fetchProfile(authUser);

@@ -18,6 +18,9 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const error = exception.getResponse() as
       | string
       | { error: string; statusCode: number; message: string[] };
+
+    console.log('status', status);
+
     this.logger.error(error);
 
     // error message가 여러 개 일수도 있기 때문에 list 처리
@@ -30,6 +33,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
         .status(status)
         .json({ success: true, statusCode: status, message: error });
     } else {
+      console.log('!!!!!');
       response.status(status).json({ success: false, ...error });
     }
   }

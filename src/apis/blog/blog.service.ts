@@ -166,4 +166,8 @@ export class BlogService {
 
     return await this.blogRepository.deleteBlog(blogId);
   }
+
+  async likeChange(blogId: string) {
+    // const result = await this.blogRepository.likeChange(blogId);
+  }
 }

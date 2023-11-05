@@ -10,7 +10,12 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
 import { AuthUser, IAuthUser } from 'src/common/auth/get-users.decorators';
 import { HttpExceptionFilter } from 'src/common/filter/http-exception.filter';
 import { ResponseInterceptor } from 'src/common/filter/response.interceptor';
@@ -27,9 +32,10 @@ export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
 
   @ApiOperation({
-    summary: '댓글 작성',
+    summary: '댓글 / 대댓글 작성',
   })
   @ApiBearerAuth('access_token')
+  @ApiQuery({ name: 'parentComment_id', type: String, required: false })
   @UseGuards(JwtAuthGuard)
   @Post()
   async createComments(
@@ -49,7 +55,7 @@ export class CommentsController {
   }
 
   @ApiOperation({
-    summary: '댓글 수정',
+    summary: '댓글 / 대댓글 수정',
   })
   @ApiBearerAuth('access_token')
   @UseGuards(JwtAuthGuard)

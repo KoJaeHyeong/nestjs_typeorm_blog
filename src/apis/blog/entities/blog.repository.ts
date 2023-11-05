@@ -61,7 +61,7 @@ export class BlogRepository {
         .orderBy('comments.created_at', 'ASC')
         .addOrderBy('subComments.created_at', 'ASC')
         .where('blog.id = :id', { id: id })
-        .andWhere('comments.parentComments_id IS NULL')
+        // .andWhere('comments.parentComments_id IS NULL')
         .getOne();
 
       console.log(blog);
@@ -70,6 +70,10 @@ export class BlogRepository {
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }
+  }
+
+  async existedBlog(id: string) {
+    return await this.blogRepositroy.exist({ where: { id } });
   }
 
   async updateBlog(originUser: User, blogInfo: UpdateBlogDto) {
@@ -103,4 +107,6 @@ export class BlogRepository {
     };
     return paginatedBlog;
   }
+
+  // async likeChange(blogId())
 }

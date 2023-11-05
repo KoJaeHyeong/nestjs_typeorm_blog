@@ -52,8 +52,6 @@ export class BlogController {
   }
 
   @ApiOperation({ summary: '유저의 블로그 조회' })
-  @ApiBearerAuth('access_token')
-  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async fetchBlog(@Param('id') blogId: string) {
     return await this.blogService.fetchBlog(blogId);
@@ -61,7 +59,6 @@ export class BlogController {
 
   @ApiOperation({ summary: '유저의 블로그 목록 조회' }) //todo 페이지네이션으로 구현
   @ApiBearerAuth('access_token')
-  @UseGuards(JwtAuthGuard)
   @Get()
   async fetchAllBlog(
     @AuthUser() authUser: IAuthUser,
@@ -77,5 +74,11 @@ export class BlogController {
   @Delete(':id')
   async deleteBlog(@Param('id') blogId: string) {
     return await this.blogService.deleteBlog(blogId);
+  }
+
+  @ApiOperation({ summary: '좋아요 ' })
+  @Post('like')
+  async likeChange(@Query('blog_id') blogId: string) {
+    return await this.blogService.likeChange(blogId);
   }
 }

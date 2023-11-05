@@ -18,13 +18,16 @@ export class CommentsRepository {
     commentInfo: CreateCommentDto,
     parentCommentId?: string,
   ) {
-    console.log('parentCommentId', parentCommentId);
-    return await this.commentsRepository.save({
-      blog: { id: blogId },
-      user: { id: userId },
-      parentComments: { id: parentCommentId },
-      ...commentInfo,
-    });
+    try {
+      return await this.commentsRepository.save({
+        blog: { id: blogId },
+        user: { id: userId },
+        parentComments: { id: parentCommentId },
+        ...commentInfo,
+      });
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
   }
 
   async updateComments(body: any) {
