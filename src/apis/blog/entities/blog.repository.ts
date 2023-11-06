@@ -43,7 +43,6 @@ export class BlogRepository {
     try {
       const findBlog = await this.blogRepositroy.findOne({
         where: { id },
-        // relations: ['blog_tag'],
         relations: { blog_tag: { tag: true } },
       });
 
@@ -55,64 +54,6 @@ export class BlogRepository {
       //   .leftJoinAndSelect('blog_tag.tag', 'tag')
       //   .where('blog.id = :id', { id: id })
       //   .getMany();
-    } catch (error) {
-      throw new InternalServerErrorException(error.message);
-    }
-  }
-
-  async findBlogOneCommentsTagById(id: string) {
-    try {
-      const comments = await this.commentsRepository
-        .createQueryBuilder('comments')
-        // .leftJoinAndSelect('comments.subComments', 'subComments')
-        .where('comments.parentComments_id IS NULL')
-        .orderBy('comments.created_at', 'ASC')
-        // .addOrderBy('subComments.created_at', 'ASC')
-        .getMany();
-
-      console.log('comments', comments);
-
-      const subComments = await this.commentsRepository
-        .createQueryBuilder('comments')
-        // .leftJoinAndSelect('comments.subComments', 'subComments')
-        .innerJoinAndSelect('comments.subComments', 'subComments')
-        .where('comments.parentComments_id IS NOT NULL')
-        .orderBy('comments.created_at', 'ASC')
-        // .addOrderBy('subComments.created_at', 'ASC')
-        .getMany();
-
-      comments.map((parent) => parent);
-
-      console.log('comments', comments);
-      console.log('subComments', subComments);
-
-      const blog = await this.blogRepositroy.findOne({
-        where: { id: id },
-        relations: ['comments'],
-        order: { created_at: 'ASC' },
-      });
-      // const blog = await this.blogRepositroy
-      //   .createQueryBuilder('blog')
-      //   .leftJoinAndSelect('blog.comments', 'comments')
-      //   .leftJoinAndSelect('comments.subComments', 'subComments')
-      //   .getOne();
-
-      // const blog = await this.blogRepositroy.
-      //   .createQueryBuilder('blog')
-      //   // .leftJoinAndSelect('blog.blog_tag', 'blog_tag')
-      //   // .leftJoinAndSelect('blog_tag.tag', 'tag')
-      //   .leftJoinAndSelect('blog.comments', 'comments')
-      //   .leftJoinAndSelect('comments.subComments', 'subComments')
-      //   .orderBy('comments.created_at', 'ASC')
-      //   .addOrderBy('subComments.created_at', 'ASC')
-      //   .where('blog.id = :id', { id: id })
-      //   .andWhere('comments.parentComments_id IS NULL')
-      //   .andWhere('subComments.parentComments_id IS NULL')
-      //   .getOne();
-
-      // console.log(blog);
-      return comments;
-      // return blog;
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }
@@ -139,10 +80,8 @@ export class BlogRepository {
 
     const pComments = await this.commentsRepository
       .createQueryBuilder('comments')
-      // .leftJoinAndSelect('comments.subComments', 'subComments')
       .where('comments.parentComments_id IS NULL')
       .orderBy('comments.created_at', 'ASC')
-      // .addOrderBy('subComments.created_at', 'ASC')
       .getMany();
 
     const commentsWithSub = await Promise.all(

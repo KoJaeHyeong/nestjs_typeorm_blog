@@ -166,9 +166,6 @@ export class BlogService {
   }
 
   async likeChange(blogId: string, postlike: plusLikeDto) {
-    // console.log('@@@@@@@@@@@', blogId);
-    // if (!blogId) throw new BadRequestException('잘못된 blog_id입니다.');
-
     const blogLikeNum = await this.blogRepository.findOneBlogById(blogId);
 
     if (!blogLikeNum) throw new BadRequestException('잘못된 blog_id입니다.');
