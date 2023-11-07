@@ -5,7 +5,8 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ./:/dump/app
+      - ./src:/app/src
+    # command: sh -c "npm run dev"
     container_name: nest_server
     ports:
       - 8000:8000

@@ -85,8 +85,6 @@ export class BlogController {
     @Query('blog_id') blogId: string,
     @Body() body: plusLikeDto,
   ) {
-    console.log('@@@@@@@@@blogId', blogId);
-
     return await this.blogService.likeChange(blogId, body);
   }
 }
