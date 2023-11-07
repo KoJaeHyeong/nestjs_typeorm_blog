@@ -37,8 +37,6 @@ export class UsersController {
   //   },
   // })
   async signUp(@Body() body: CreateUserDto) {
-    console.log('@@@@@@@@@@@', body.password);
-
     return await this.usersService.signUp(body);
   }
 
