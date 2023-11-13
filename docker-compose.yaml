@@ -23,3 +23,5 @@ services:
     container_name: mysql_blog
     ports:
       - 3306:3306
+    volumes:
+      - ./mysql_blog:/var/lib/mysql

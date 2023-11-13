@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { MulterModule } from '@nestjs/platform-express';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ormconfig } from 'ormconfig';
 import { AppController } from './app.controller';
@@ -14,6 +15,10 @@ import { apiModules } from './common/modules/apis.modules';
 
     TypeOrmModule.forRootAsync({ useFactory: ormconfig }),
     ...apiModules,
+
+    MulterModule.register({
+      dest: './upload',
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],

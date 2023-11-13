@@ -7,6 +7,7 @@ import {
   Patch,
   Post,
   Query,
+  UploadedFile,
   UseFilters,
   UseGuards,
   UseInterceptors,
@@ -16,6 +17,7 @@ import { AuthUser, IAuthUser } from 'src/common/auth/get-users.decorators';
 import { ResponseInterceptor } from 'src/common/filter/response.interceptor';
 import { JwtAuthGuard } from '../auth/jwt/jwt.guard';
 
+import { FileInterceptor } from '@nestjs/platform-express';
 import { HttpExceptionFilter } from 'src/common/filter/http-exception.filter';
 import { BlogService } from './blog.service';
 import { CreateBlogDto } from './dto/create.blog.dto';
@@ -86,5 +88,15 @@ export class BlogController {
     @Body() body: plusLikeDto,
   ) {
     return await this.blogService.likeChange(blogId, body);
+  }
+
+  @Post('upload')
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(FileInterceptor('image'))
+  async upload(
+    @UploadedFile() file: Express.Multer.File,
+    @AuthUser() authUser: IAuthUser,
+  ) {
+    return await this.blogService.upLoadImg(authUser.email, file);
   }
 }

@@ -4,6 +4,7 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import * as fs from 'fs';
 import { In, Repository } from 'typeorm';
 import { BlogTag } from '../blog_tag/entities/blog_tag.entity';
 import { TagService } from '../tag/tag.service';
@@ -189,5 +190,29 @@ export class BlogService {
     };
 
     return returnForm;
+  }
+
+  async upLoadImg(userEmail: string, file: Express.Multer.File) {
+    const folderPath = './upload';
+    const { originalname, buffer } = file;
+
+    console.log(userEmail);
+
+    const imgStrList = originalname.split('.');
+    const emailFirst = userEmail.split('@')[0];
+    const filename = `${emailFirst}_${Date.now()}.${
+      imgStrList[imgStrList.length - 1]
+    }`; // timestamp로
+
+    const filePath = `${folderPath}/${filename}`;
+    if (!fs.existsSync(folderPath)) {
+      fs.mkdirSync(folderPath);
+    }
+
+    console.log(filename);
+
+    fs.writeFileSync(filePath, buffer);
+
+    return { fileName: filename };
   }
 }
