@@ -63,7 +63,7 @@ export class AwsService {
 
       const result = await this.awsS3.send(deleteIgmObject);
 
-      return result;
+      return 'image deleted!';
     } catch (error) {
       throw new BadRequestException(`File delete failed ${error.message}`);
     }
