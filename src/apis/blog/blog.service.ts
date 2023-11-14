@@ -6,10 +6,12 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import * as fs from 'fs';
 import { In, Repository } from 'typeorm';
+import { v4 as uuidv4 } from 'uuid';
 import { BlogTag } from '../blog_tag/entities/blog_tag.entity';
 import { TagService } from '../tag/tag.service';
 import { UserRepository } from '../user/entities/user.repository';
 import { CreateBlogDto } from './dto/create.blog.dto';
+import { CreateFileDto } from './dto/file.create.dto';
 import { plusLikeDto } from './dto/plus.like.dto';
 import { UpdateBlogDto } from './dto/update.blog.dto';
 import { BlogRepository } from './entities/blog.repository';
@@ -192,27 +194,76 @@ export class BlogService {
     return returnForm;
   }
 
-  async upLoadImg(userEmail: string, file: Express.Multer.File) {
-    const folderPath = './upload';
-    const { originalname, buffer } = file;
+  async upLoadImg(userEmail: string, files: CreateFileDto) {
+    try {
+      const folderPath = './upload';
+      const emailFirst = userEmail.split('@')[0];
+      console.log(files);
 
-    console.log(userEmail);
+      const { thumbnail, imgs } = files;
+      let filename = '';
 
-    const imgStrList = originalname.split('.');
-    const emailFirst = userEmail.split('@')[0];
-    const filename = `${emailFirst}_${Date.now()}.${
-      imgStrList[imgStrList.length - 1]
-    }`; // timestamp로
+      let imgsList = [];
 
-    const filePath = `${folderPath}/${filename}`;
-    if (!fs.existsSync(folderPath)) {
-      fs.mkdirSync(folderPath);
+      if (!fs.existsSync(folderPath)) {
+        fs.mkdirSync(folderPath);
+      }
+
+      if (thumbnail) {
+        const thumbnailList = thumbnail[0].originalname.split('.');
+        console.log(thumbnailList);
+        filename = `${emailFirst}_${uuidv4()}.${
+          thumbnailList[thumbnailList.length - 1]
+        }`;
+
+        console.log(thumbnail);
+
+        const filePath = `${folderPath}/${filename}`;
+        fs.writeFileSync(filePath, thumbnail[0].buffer);
+      }
+
+      if (imgs) {
+        for (const { originalname, ...rest } of imgs) {
+          const imgStrList = originalname.split('.');
+          filename = `${emailFirst}_${uuidv4()}.${
+            imgStrList[imgStrList.length - 1]
+          }`;
+          const filePath = `${folderPath}/${filename}`;
+          fs.writeFileSync(filePath, rest.buffer);
+          imgsList.push(filename);
+        }
+      }
+
+      // for (const { originalname, ...rest } of thumbnail) {
+      //   const imgStrList = originalname.split('.');
+      //   const filename = `${emailFirst}_${Date.now()}.${
+      //     imgStrList[imgStrList.length - 1]
+      //   }`;
+      //   const filePath = `${folderPath}/${filename}`;
+
+      //   fs.writeFileSync(filePath, rest.buffer);
+
+      //   thumbnailList.push(filename);
+      // }
+
+      // for (const { originalname, ...rest } of imgs) {
+      //   const imgStrList = originalname.split('.');
+      //   const filename = `${emailFirst}_${new Date().getTime().toString()}.${
+      //     imgStrList[imgStrList.length - 1]
+      //   }`;
+      //   const filePath = `${folderPath}/${filename}`;
+
+      //   fs.writeFileSync(filePath, rest.buffer);
+
+      //   imgsList.push(filename);
+      // }
+
+      return {
+        thumnail: filename ?? '',
+        imgs: imgsList.toString(),
+      };
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
     }
-
-    console.log(filename);
-
-    fs.writeFileSync(filePath, buffer);
-
-    return { fileName: filename };
   }
 }

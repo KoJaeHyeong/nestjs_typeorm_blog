@@ -27,6 +27,12 @@ export class Blog extends CommonEntity {
   @Column({ default: 0 })
   like_num: number;
 
+  @Column({ nullable: true })
+  thumnail: string;
+
+  @Column({ nullable: true })
+  imgs: string;
+
   @ManyToOne((type) => User, (user) => user.blog, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
   user: User;

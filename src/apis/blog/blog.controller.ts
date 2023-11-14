@@ -7,7 +7,7 @@ import {
   Patch,
   Post,
   Query,
-  UploadedFile,
+  UploadedFiles,
   UseFilters,
   UseGuards,
   UseInterceptors,
@@ -17,10 +17,11 @@ import { AuthUser, IAuthUser } from 'src/common/auth/get-users.decorators';
 import { ResponseInterceptor } from 'src/common/filter/response.interceptor';
 import { JwtAuthGuard } from '../auth/jwt/jwt.guard';
 
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { HttpExceptionFilter } from 'src/common/filter/http-exception.filter';
 import { BlogService } from './blog.service';
 import { CreateBlogDto } from './dto/create.blog.dto';
+import { CreateFileDto } from './dto/file.create.dto';
 import { plusLikeDto } from './dto/plus.like.dto';
 import { UpdateBlogDto } from './dto/update.blog.dto';
 
@@ -92,11 +93,13 @@ export class BlogController {
 
   @Post('upload')
   @UseGuards(JwtAuthGuard)
-  @UseInterceptors(FileInterceptor('image'))
+  @UseInterceptors(
+    FileFieldsInterceptor([{ name: 'thumbnail' }, { name: 'imgs' }]),
+  )
   async upload(
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFiles() files: CreateFileDto,
     @AuthUser() authUser: IAuthUser,
   ) {
-    return await this.blogService.upLoadImg(authUser.email, file);
+    return await this.blogService.upLoadImg(authUser.email, files);
   }
 }
