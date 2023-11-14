@@ -194,76 +194,41 @@ export class BlogService {
     return returnForm;
   }
 
-  async upLoadImg(userEmail: string, files: CreateFileDto) {
+  //local_img 저장
+  async upLoadLocalImg(folder: string, userEmail: string, file: CreateFileDto) {
     try {
-      const folderPath = './upload';
       const emailFirst = userEmail.split('@')[0];
-      console.log(files);
 
-      const { thumbnail, imgs } = files;
-      let filename = '';
-
-      let imgsList = [];
-
-      if (!fs.existsSync(folderPath)) {
-        fs.mkdirSync(folderPath);
+      if (!fs.existsSync(folder)) {
+        fs.mkdirSync(folder);
       }
+      console.log(file);
 
-      if (thumbnail) {
-        const thumbnailList = thumbnail[0].originalname.split('.');
-        console.log(thumbnailList);
-        filename = `${emailFirst}_${uuidv4()}.${
-          thumbnailList[thumbnailList.length - 1]
-        }`;
+      const imgStrList = file['originalname'].split('.');
+      const fileName = `${emailFirst}_${uuidv4()}.${
+        imgStrList[imgStrList.length - 1]
+      }`;
 
-        console.log(thumbnail);
+      const filePath = `${folder}/${fileName}`;
+      fs.writeFileSync(filePath, file['buffer']);
 
-        const filePath = `${folderPath}/${filename}`;
-        fs.writeFileSync(filePath, thumbnail[0].buffer);
-      }
-
-      if (imgs) {
-        for (const { originalname, ...rest } of imgs) {
-          const imgStrList = originalname.split('.');
-          filename = `${emailFirst}_${uuidv4()}.${
-            imgStrList[imgStrList.length - 1]
-          }`;
-          const filePath = `${folderPath}/${filename}`;
-          fs.writeFileSync(filePath, rest.buffer);
-          imgsList.push(filename);
-        }
-      }
-
-      // for (const { originalname, ...rest } of thumbnail) {
-      //   const imgStrList = originalname.split('.');
-      //   const filename = `${emailFirst}_${Date.now()}.${
-      //     imgStrList[imgStrList.length - 1]
-      //   }`;
-      //   const filePath = `${folderPath}/${filename}`;
-
-      //   fs.writeFileSync(filePath, rest.buffer);
-
-      //   thumbnailList.push(filename);
-      // }
-
-      // for (const { originalname, ...rest } of imgs) {
-      //   const imgStrList = originalname.split('.');
-      //   const filename = `${emailFirst}_${new Date().getTime().toString()}.${
-      //     imgStrList[imgStrList.length - 1]
-      //   }`;
-      //   const filePath = `${folderPath}/${filename}`;
-
-      //   fs.writeFileSync(filePath, rest.buffer);
-
-      //   imgsList.push(filename);
-      // }
-
-      return {
-        thumnail: filename ?? '',
-        imgs: imgsList.toString(),
-      };
+      return fileName;
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      throw new BadRequestException(`File Upload failed ${error.message}`);
+    }
+  }
+
+  //local_img 삭제
+  async deleteLocaImg(folder: string, file: object) {
+    try {
+      console.log(file);
+      const filePath = `${folder}/${file['image']}`;
+
+      fs.unlinkSync(filePath);
+
+      return 'image deleted!';
+    } catch (error) {
+      throw new BadRequestException(`File delete failed ${error.message}`);
     }
   }
 }

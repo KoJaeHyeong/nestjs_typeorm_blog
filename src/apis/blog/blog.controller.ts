@@ -7,7 +7,7 @@ import {
   Patch,
   Post,
   Query,
-  UploadedFiles,
+  UploadedFile,
   UseFilters,
   UseGuards,
   UseInterceptors,
@@ -17,7 +17,8 @@ import { AuthUser, IAuthUser } from 'src/common/auth/get-users.decorators';
 import { ResponseInterceptor } from 'src/common/filter/response.interceptor';
 import { JwtAuthGuard } from '../auth/jwt/jwt.guard';
 
-import { FileFieldsInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { AwsService } from 'src/aws.service';
 import { HttpExceptionFilter } from 'src/common/filter/http-exception.filter';
 import { BlogService } from './blog.service';
 import { CreateBlogDto } from './dto/create.blog.dto';
@@ -28,9 +29,12 @@ import { UpdateBlogDto } from './dto/update.blog.dto';
 @UseInterceptors(ResponseInterceptor)
 @UseFilters(HttpExceptionFilter)
 @ApiTags('Blog')
-@Controller('users/blog')
+@Controller('blog')
 export class BlogController {
-  constructor(private readonly blogService: BlogService) {}
+  constructor(
+    private readonly blogService: BlogService,
+    private readonly awsService: AwsService,
+  ) {}
 
   @ApiOperation({ summary: '블로그 작성' })
   @ApiBearerAuth('access_token')
@@ -91,15 +95,37 @@ export class BlogController {
     return await this.blogService.likeChange(blogId, body);
   }
 
+  @ApiOperation({ summary: '이미지 저장' })
+  @ApiBearerAuth('access_token')
   @Post('upload')
   @UseGuards(JwtAuthGuard)
-  @UseInterceptors(
-    FileFieldsInterceptor([{ name: 'thumbnail' }, { name: 'imgs' }]),
-  )
+  @UseInterceptors(FileInterceptor('image', { limits: { fileSize: 4000000 } }))
   async upload(
-    @UploadedFiles() files: CreateFileDto,
+    @UploadedFile() file: CreateFileDto,
     @AuthUser() authUser: IAuthUser,
   ) {
-    return await this.blogService.upLoadImg(authUser.email, files);
+    if (process.env.DEV_MODE === 'dev')
+      return await this.blogService.upLoadLocalImg(
+        'upload',
+        authUser.email,
+        file,
+      );
+
+    return await this.awsService.upLoadFilesToS3(
+      'upload',
+      authUser.email,
+      file,
+    );
+  }
+
+  @ApiOperation({ summary: '이미지 삭제' })
+  @ApiBearerAuth('access_token')
+  @Post('deleteimg')
+  @UseGuards(JwtAuthGuard)
+  async deleteImg(@Body() body: object, @AuthUser() authUser: IAuthUser) {
+    if (process.env.DEV_MODE === 'dev')
+      return await this.blogService.deleteLocaImg('upload', body);
+
+    return this.awsService.deleteS3File('upload', body);
   }
 }

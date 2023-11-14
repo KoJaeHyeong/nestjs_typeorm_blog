@@ -9,7 +9,6 @@ import {
 export class RequestValidationPipe implements PipeTransform {
   transform(value: any, metadata: ArgumentMetadata) {
     const limitb = 4000000; // 4MB
-    // console.log(value);
 
     if (metadata.data === 'parentComment_id') {
       return value;

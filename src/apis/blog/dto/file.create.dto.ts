@@ -3,16 +3,8 @@ import { IsOptional } from 'class-validator';
 
 export class CreateFileDto {
   @ApiProperty({
-    description: '썸네일 이미지',
-    example: '[file...]',
+    description: '이미지 저장',
   })
   @IsOptional()
-  thumbnail?: Express.Multer.File;
-
-  @ApiProperty({
-    description: '게시글 이미지들',
-    example: '[file...]',
-  })
-  @IsOptional()
-  imgs?: Express.Multer.File[];
+  image: Express.Multer.File;
 }

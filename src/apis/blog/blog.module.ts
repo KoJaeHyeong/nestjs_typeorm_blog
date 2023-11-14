@@ -5,6 +5,7 @@ import { TagModule } from '../tag/tag.module';
 import { User } from '../user/entities/user.entity';
 import { UsersModule } from '../user/users.module';
 
+import { AwsService } from 'src/aws.service';
 import { CommentsModule } from '../comments/comments.module';
 import { Comment } from '../comments/entities/comments.entity';
 import { BlogController } from './blog.controller';
@@ -20,6 +21,6 @@ import { BlogRepository } from './entities/blog.repository';
     forwardRef(() => CommentsModule),
   ],
   controllers: [BlogController],
-  providers: [BlogService, BlogRepository],
+  providers: [BlogService, BlogRepository, AwsService],
 })
 export class BlogModule {}
