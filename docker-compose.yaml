@@ -1,6 +1,7 @@
 version: '3.8'
 services:
   nest_server:
+    image: kojaehyeong/blog_project:latest
     build:
       context: .
       dockerfile: Dockerfile
@@ -10,8 +11,8 @@ services:
     container_name: nest_server
     ports:
       - 8000:8000
-    depends_on:
-      - mysql_blog
+    # depends_on:
+    #   - mysql_blog
 
   mysql_blog:
     platform: linux/x86_64

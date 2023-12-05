@@ -8,6 +8,9 @@ import {
 @Injectable()
 export class RequestValidationPipe implements PipeTransform {
   transform(value: any, metadata: ArgumentMetadata) {
+    console.log('value', value);
+    console.log('metadata.data', metadata.data);
+
     const limitb = 4000000; // 4MB
 
     if (metadata.data === 'parentComment_id') {
