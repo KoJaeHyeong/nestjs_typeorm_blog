@@ -29,7 +29,8 @@ jobs:
              git pull || exit 1
              npm install || exit 2
              npm run build || exit 3
-             npm run start & npx wait-on http://localhost:8000 || exit 5
+             pm2 stop main || exit 4
+             pm2 start dist/src/main.js || exit 5
              exit
           "
 
