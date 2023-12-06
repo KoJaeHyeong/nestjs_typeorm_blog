@@ -29,7 +29,7 @@ jobs:
              git pull || exit 1
              npm install || exit 2
              npm run build || exit 3
-             pkill node || exit 4
+             sudo pkill node || exit 4
              npm run start & npx wait-on http://localhost:8000 || exit 5
              exit
           "
