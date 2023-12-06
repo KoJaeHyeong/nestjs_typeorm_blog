@@ -13,7 +13,7 @@ jobs:
         run:
           | # | 이거는 여러개의 명령어를 사용할때, # sectets는 github action의 환경변수
           mkdir -p ~/.ssh/
-          echo "${{ secrets.SSH_PRIVATE_KEY }}"  > ~/.ssh/id_rsa
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
 
       - name: Set up knwon hosts
