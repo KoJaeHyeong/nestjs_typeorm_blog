@@ -3,6 +3,6 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class AppService {
   getHello(): string {
-    return 'BLOG_API_VERSION: 1.0.0';
+    return 'BLOG_API_VERSION: 1.0.1'; // github action test용
   }
 }
