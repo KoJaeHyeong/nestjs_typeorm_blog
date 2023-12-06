@@ -24,6 +24,7 @@ jobs:
       - name: SSH and deploy # id_rsa는 default값으로 본다.
         run: | # || exit 1 는 실패했을 시 ssh 종료를 위함
           ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_PUBLIC_IP }} " 
+             nvm use 18
              cd nestjs_typeorm_blog
              git pull || exit 1
              npm install || exit 1
