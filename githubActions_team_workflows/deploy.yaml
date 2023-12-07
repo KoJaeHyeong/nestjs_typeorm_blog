@@ -1,0 +1,37 @@
+name: deploy
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up SSH
+        run:
+          | # | 이거는 여러개의 명령어를 사용할때, # sectets는 github action의 환경변수
+          mkdir -p ~/.ssh/
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+      - name: Set up knwon hosts
+        run: |
+          echo "${{ secrets.SSH_KNOWN_HOSTS }}" >> ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+
+      - name: SSH and deploy # id_rsa는 default값으로 본다.
+        run: | # || exit 1 는 실패했을 시 ssh 종료를 위함
+          ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_PUBLIC_IP }} " 
+             node -v
+             cd nestjs_typeorm_blog
+             git pull || exit 1
+             npm install || exit 2
+             npm run build || exit 3
+             pm2 stop main || exit 4
+             pm2 start dist/src/main.js || exit 5
+             exit
+          "
+
+#             sudo pkill node || exit 4

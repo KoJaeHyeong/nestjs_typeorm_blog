@@ -1,0 +1,19 @@
+name: test # action 이름
+
+on: pull_request # 어떠한 이벤트가 발생했을때, trigger를 발생 시킬 지
+
+jobs:
+  test:
+    runs-on: ubuntu-22.04 # 어떻게 돌아가는지
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Node.js setup
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Install npm packages
+        run: npm ci # npm install이랑 같은 역할 => npm 에서 배포환경을 쓰는 용도 만들어 준 것.
+
+      - name: project build
+        run: npm run build
